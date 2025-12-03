@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pang Yi Hahn | Adventure Portfolio</title>
+    <title>Pang Yi Hahn | Portfolio</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -32,7 +32,6 @@
                         'float': 'float 6s ease-in-out infinite',
                         'slide-in-left': 'slideInLeft 1s ease-out forwards',
                         'slide-in-right': 'slideInRight 1s ease-out forwards',
-                        'fade-in-up': 'fadeInUp 1s ease-out forwards',
                     },
                     keyframes: {
                         float: {
@@ -46,10 +45,6 @@
                         slideInRight: {
                             '0%': { opacity: '0', transform: 'translateX(50px)' },
                             '100%': { opacity: '1', transform: 'translateX(0)' },
-                        },
-                        fadeInUp: {
-                            '0%': { opacity: '0', transform: 'translateY(20px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
                         }
                     }
                 }
@@ -72,8 +67,19 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -2;
+            z-index: -3; /* Moved further back */
             overflow: hidden;
+        }
+        
+        /* Snow Canvas */
+        #snow-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2; /* On top of image, behind content */
+            pointer-events: none;
         }
         
         .bg-image {
@@ -96,7 +102,7 @@
             pointer-events: none;
         }
 
-        /* --- Animations & Interactions --- */
+        /* --- Navigation --- */
         .nav-link {
             position: relative;
             padding-bottom: 2px;
@@ -115,7 +121,7 @@
             width: 100%;
         }
 
-        /* Scroll Reveal Class */
+        /* --- Scroll Reveal & Stagger --- */
         .reveal-on-scroll {
             opacity: 0;
             transform: translateY(30px);
@@ -126,7 +132,12 @@
             transform: translateY(0);
         }
 
-        /* Tilt Effect for Cards */
+        /* Stagger Delays */
+        .delay-100 { transition-delay: 0.1s; }
+        .delay-200 { transition-delay: 0.2s; }
+        .delay-300 { transition-delay: 0.3s; }
+
+        /* --- Tilt Effect --- */
         .tilt-card {
             transition: transform 0.1s ease, box-shadow 0.3s ease;
             transform-style: preserve-3d;
@@ -136,7 +147,7 @@
             z-index: 10;
         }
 
-        /* Social Icons */
+        /* --- Social Icons --- */
         .social-btn {
             position: relative;
             overflow: hidden;
@@ -160,7 +171,7 @@
             color: #0f172a;
         }
 
-        /* Typing Cursor */
+        /* --- Typing Cursor --- */
         .typing-cursor::after {
             content: '|';
             animation: blink 1s step-end infinite;
@@ -171,10 +182,12 @@
 </head>
 <body class="antialiased selection:bg-white selection:text-black">
 
-    <!-- Background -->
+    <!-- Backgrounds -->
     <div class="bg-fixed-wrapper">
         <div id="parallax-bg" class="bg-image"></div>
     </div>
+    <!-- Snowfall Layer -->
+    <canvas id="snow-canvas"></canvas>
     <div class="bg-overlay"></div>
 
     <!-- Navigation -->
@@ -190,7 +203,7 @@
     <section id="hero" class="min-h-screen flex items-center relative px-6 md:px-20 pt-20 overflow-hidden">
         <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             
-            <!-- LEFT: Big Text (Slide In) -->
+            <!-- LEFT: Big Text -->
             <div class="text-white z-10 space-y-8 opacity-0 animate-slide-in-left" style="animation-delay: 0.2s; animation-fill-mode: forwards;">
                 <div>
                     <h1 class="text-6xl md:text-8xl font-black leading-none tracking-tightest mb-4 drop-shadow-2xl">
@@ -205,7 +218,7 @@
                     </h2>
                 </div>
 
-                <!-- Social Links (Updated Username) -->
+                <!-- Social Links -->
                 <div class="flex gap-4 pt-4">
                     <a href="https://linkedin.com/in/yi-hahn-pang-" target="_blank" class="social-btn border border-white/30 rounded-full w-12 h-12 flex items-center justify-center text-lg" title="LinkedIn">
                         <i class="fab fa-linkedin-in"></i>
@@ -222,12 +235,16 @@
             <!-- RIGHT: Profile Photo -->
             <div class="flex justify-center md:justify-end z-10 order-first md:order-last mb-8 md:mb-0 opacity-0 animate-slide-in-right" style="animation-delay: 0.5s; animation-fill-mode: forwards;">
                 <div class="w-80 h-80 md:w-[28rem] md:h-[28rem] relative animate-float">
-                    <!-- Frame -->
                     <div class="absolute inset-0 border-2 border-white/30 transform translate-x-6 translate-y-6"></div>
-                    <!-- Image -->
                     <img src="profile.jpg" alt="Profile" class="w-full h-full object-cover shadow-2xl relative z-10 transition-all duration-700">
                 </div>
             </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-0 w-full flex flex-col items-center justify-center text-white/60 cursor-pointer hover:text-white transition-colors animate-bounce" onclick="scrollToSection('about')">
+            <span class="text-[10px] tracking-widest uppercase mb-2">Start Descent</span>
+            <i class="fas fa-chevron-down text-xl"></i>
         </div>
     </section>
 
@@ -288,7 +305,7 @@
                 </div>
 
                 <!-- Job 2 -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 group reveal-on-scroll">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 group reveal-on-scroll delay-100">
                     <div class="md:col-span-1 relative">
                         <span class="text-5xl font-black opacity-10 group-hover:opacity-40 transition-opacity">02</span>
                         <div class="text-sm font-bold mt-2">JAN - JUN 2025</div>
@@ -307,7 +324,7 @@
                 </div>
 
                 <!-- Job 3 -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 group reveal-on-scroll">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 group reveal-on-scroll delay-200">
                     <div class="md:col-span-1 relative">
                         <span class="text-5xl font-black opacity-10 group-hover:opacity-40 transition-opacity">03</span>
                         <div class="text-sm font-bold mt-2">MAY - AUG 2024</div>
@@ -334,7 +351,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 
-                <!-- Project 1 (Updated Username) -->
+                <!-- Project 1 -->
                 <a href="https://github.com/pangyihahn/llm-kg-project" target="_blank" class="tilt-card block h-full bg-white/5 p-8 border border-white/10 hover:border-white/50 rounded-sm reveal-on-scroll">
                     <div class="flex flex-col justify-between h-full">
                         <div>
@@ -349,8 +366,8 @@
                     </div>
                 </a>
 
-                <!-- Project 2 (Updated Username) -->
-                <a href="https://github.com/pangyihahn/sgx-project" target="_blank" class="tilt-card block h-full bg-white/5 p-8 border border-white/10 hover:border-white/50 rounded-sm reveal-on-scroll" style="transition-delay: 0.1s">
+                <!-- Project 2 -->
+                <a href="https://github.com/pangyihahn/sgx-project" target="_blank" class="tilt-card block h-full bg-white/5 p-8 border border-white/10 hover:border-white/50 rounded-sm reveal-on-scroll delay-100">
                     <div class="flex flex-col justify-between h-full">
                         <div>
                             <div class="flex justify-between items-start mb-4">
@@ -364,8 +381,8 @@
                     </div>
                 </a>
 
-                <!-- Project 3 (Updated Username) -->
-                <a href="https://github.com/pangyihahn/kafka-project" target="_blank" class="tilt-card block h-full bg-white/5 p-8 border border-white/10 hover:border-white/50 rounded-sm reveal-on-scroll" style="transition-delay: 0.2s">
+                <!-- Project 3 -->
+                <a href="https://github.com/pangyihahn/kafka-project" target="_blank" class="tilt-card block h-full bg-white/5 p-8 border border-white/10 hover:border-white/50 rounded-sm reveal-on-scroll delay-200">
                     <div class="flex flex-col justify-between h-full">
                         <div>
                             <div class="flex justify-between items-start mb-4">
@@ -379,8 +396,8 @@
                     </div>
                 </a>
 
-                 <!-- Project 4 (Updated Username) -->
-                 <a href="https://github.com/pangyihahn/data-project" target="_blank" class="tilt-card block h-full bg-white/5 p-8 border border-white/10 hover:border-white/50 rounded-sm reveal-on-scroll" style="transition-delay: 0.3s">
+                 <!-- Project 4 -->
+                 <a href="https://github.com/pangyihahn/data-project" target="_blank" class="tilt-card block h-full bg-white/5 p-8 border border-white/10 hover:border-white/50 rounded-sm reveal-on-scroll delay-300">
                     <div class="flex flex-col justify-between h-full">
                         <div>
                             <div class="flex justify-between items-start mb-4">
@@ -459,6 +476,67 @@
 
         // Start typing loop
         setTimeout(type, 1000);
+
+
+        // --- SNOWFALL ANIMATION ---
+        const canvas = document.getElementById('snow-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let snowflakes = [];
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+
+        function createSnowflake() {
+            return {
+                x: Math.random() * width,
+                y: Math.random() * height,
+                radius: Math.random() * 2 + 1,
+                speed: Math.random() * 1 + 0.5,
+                wind: Math.random() * 0.5 - 0.25
+            };
+        }
+
+        function initSnow() {
+            snowflakes = [];
+            for (let i = 0; i < 100; i++) {
+                snowflakes.push(createSnowflake());
+            }
+        }
+
+        function drawSnow() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+            ctx.beginPath();
+            for (let flake of snowflakes) {
+                ctx.moveTo(flake.x, flake.y);
+                ctx.arc(flake.x, flake.y, flake.radius, 0, Math.PI * 2);
+            }
+            ctx.fill();
+            moveSnow();
+            requestAnimationFrame(drawSnow);
+        }
+
+        function moveSnow() {
+            for (let flake of snowflakes) {
+                flake.y += flake.speed;
+                flake.x += flake.wind;
+
+                if (flake.y > height) {
+                    flake.y = 0;
+                    flake.x = Math.random() * width;
+                }
+            }
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+        initSnow();
+        drawSnow();
 
 
         // --- INTERSECTION OBSERVER FOR REVEAL ON SCROLL ---
